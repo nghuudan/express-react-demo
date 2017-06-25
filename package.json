@@ -1,0 +1,39 @@
+{
+  "name": "express-react-demo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Demo project for an Express server and React client",
+  "main": "index.js",
+  "scripts": {
+    "client:build": "cd webpack-react-babel-starter && npm run build",
+    "client:debug": "cd webpack-react-babel-starter && npm run debug",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nghuudan/express-react-demo.git"
+  },
+  "keywords": [
+    "demo",
+    "express",
+    "server",
+    "react",
+    "client"
+  ],
+  "author": "Dan Nguyen <nghuudan@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nghuudan/express-react-demo/issues"
+  },
+  "homepage": "https://github.com/nghuudan/express-react-demo#readme",
+  "devDependencies": {
+    "eslint": "^4.1.0",
+    "eslint-plugin-react": "^7.1.0"
+  },
+  "dependencies": {
+    "express": "^4.15.3",
+    "morgan": "^1.8.2",
+    "winston": "^2.3.1"
+  }
+}

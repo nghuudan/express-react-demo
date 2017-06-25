@@ -1,0 +1,3 @@
+[submodule "webpack-react-babel-starter"]
+	path = webpack-react-babel-starter
+	url = https://github.com/nghuudan/webpack-react-babel-starter.git
