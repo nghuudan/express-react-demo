@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const logger = require('../utils/logger');
+const userService = require('../services/user-service');
 
 const database = new Sequelize('express_react_demo', 'root', '', {
   host: '127.0.0.1',
@@ -17,28 +18,13 @@ const database = new Sequelize('express_react_demo', 'root', '', {
 const User = database.import('./user');
 
 User.sync({ force: true }).then(() => {
-  User.bulkCreate([
-    {
-      username: 'aaron',
-      password: 'demo',
-      first_name: 'Aaron',
-      last_name: 'Adams',
-      active: true
-    },
-    {
-      username: 'betty',
-      password: 'demo',
-      first_name: 'Betty',
-      last_name: 'Brown',
-      active: true
-    },
-    {
-      username: 'chris',
-      password: 'demo',
-      first_name: 'Chris',
-      last_name: 'Crane'
-    }
-  ]);
+  userService.createUser({
+    username: 'aaron',
+    password: 'demo',
+    first_name: 'Aaron',
+    last_name: 'Adams',
+    active: true
+  }).then(user => logger.info('createUser:', user));
 }).catch(error => logger.error(error));
 
 module.exports = database;
