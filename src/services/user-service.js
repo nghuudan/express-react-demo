@@ -1,5 +1,6 @@
 const db = require('../database');
 const logger = require('../utils/logger');
+const generateSalt = require('../utils/generate-salt');
 const hashPassword = require('../utils/hash-password');
 
 const attributes = [
@@ -17,7 +18,7 @@ exports.getAllUsers = () => db.models.user.findAll({ attributes })
   .then(users => users)
   .catch(err => {
     logger.error(err);
-    return err;
+    throw err;
   });
 
 exports.getUserById = id => db.models.user.findOne({
@@ -33,11 +34,11 @@ exports.getUserById = id => db.models.user.findOne({
   }
 }).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });
 
 exports.createUser = userToCreate => {
-  const salt = 'my_salt_' + Date.now();
+  const salt = generateSalt('mysalt');
   userToCreate.password = hashPassword(userToCreate.password, salt);
   userToCreate.salt = salt;
 
@@ -45,7 +46,7 @@ exports.createUser = userToCreate => {
     .then(user => user)
     .catch(err => {
       logger.error(err);
-      return err;
+      throw err;
     });
 };
 
@@ -56,7 +57,7 @@ exports.updateUser = (id, user) => db.models.user.findOne({
 }).then(userToUpdate => {
   if (userToUpdate) {
     if (user.password) {
-      const salt = 'my_salt_' + Date.now();
+      const salt = generateSalt('mysalt');
       user.password = hashPassword(user.password, salt);
       user.salt = salt;
     }
@@ -67,7 +68,7 @@ exports.updateUser = (id, user) => db.models.user.findOne({
   }
 }).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });
 
 exports.deleteUser = id => db.models.user.findOne({
@@ -82,5 +83,5 @@ exports.deleteUser = id => db.models.user.findOne({
   }
 }).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });

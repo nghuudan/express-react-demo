@@ -24,7 +24,7 @@ exports.getAllChats = () => db.models.chat.findAll({
   ]
 }).then(chats => chats).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });
 
 exports.getChatById = id => db.models.chat.findOne({
@@ -43,14 +43,14 @@ exports.getChatById = id => db.models.chat.findOne({
   }
 }).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });
 
 exports.createChat = chatToCreate => db.models.chat.create(chatToCreate)
   .then(chat => chat)
   .catch(err => {
     logger.error(err);
-    return err;
+    throw err;
   });
 
 exports.updateChat = (id, chat) => db.models.chat.findOne({
@@ -66,7 +66,7 @@ exports.updateChat = (id, chat) => db.models.chat.findOne({
   }
 }).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });
 
 exports.deleteChat = id => db.models.chat.findOne({
@@ -81,5 +81,5 @@ exports.deleteChat = id => db.models.chat.findOne({
   }
 }).catch(err => {
   logger.error(err);
-  return err;
+  throw err;
 });
