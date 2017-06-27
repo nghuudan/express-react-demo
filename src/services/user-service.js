@@ -5,15 +5,16 @@ const hashPassword = require('../utils/hash-password');
 const attributes = [
   'id',
   'username',
-  'first_name',
-  'last_name',
-  'create_date',
-  'last_update'
+  'firstName',
+  'lastName',
+  'createDate',
+  'lastUpdate'
 ];
 
-exports.getAllUsers = () => db.models.user.findAll({
-  attributes
-}).then(users => users)
+exports.attributes = attributes;
+
+exports.getAllUsers = () => db.models.user.findAll({ attributes })
+  .then(users => users)
   .catch(err => {
     logger.error(err);
     return err;
@@ -26,7 +27,7 @@ exports.getUserById = id => db.models.user.findOne({
   }
 }).then(user => {
   if (user) {
-    return user.get();
+    return user;
   } else {
     return null;
   }
@@ -41,7 +42,7 @@ exports.createUser = userToCreate => {
   userToCreate.salt = salt;
 
   return db.models.user.create(userToCreate)
-    .then(user => user.get())
+    .then(user => user)
     .catch(err => {
       logger.error(err);
       return err;
@@ -59,8 +60,8 @@ exports.updateUser = (id, user) => db.models.user.findOne({
       user.password = hashPassword(user.password, salt);
       user.salt = salt;
     }
-    user.last_update = new Date();
-    return userToUpdate.update(user).then(() => userToUpdate.get());
+    user.lastUpdate = new Date();
+    return userToUpdate.update(user).then(() => userToUpdate);
   } else {
     return null;
   }
@@ -75,7 +76,7 @@ exports.deleteUser = id => db.models.user.findOne({
   }
 }).then(userToDelete => {
   if (userToDelete) {
-    return userToDelete.destroy().then(() => userToDelete.get());
+    return userToDelete.destroy().then(() => userToDelete);
   } else {
     return null;
   }
