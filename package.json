@@ -5,8 +5,8 @@
   "description": "Demo project for an Express server and React client",
   "main": "index.js",
   "scripts": {
-    "client:build": "cd webpack-react-babel-starter && npm run build",
-    "client:debug": "cd webpack-react-babel-starter && npm run debug",
+    "client:build": "cd webpack-react-babel-starter && npm install && npm run build",
+    "client:debug": "cd webpack-react-babel-starter && npm install && npm run debug",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
