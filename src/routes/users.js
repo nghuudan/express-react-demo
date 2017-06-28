@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  userService.updateUser(req.params.id, req.body)
+  userService.updateUser({id: req.params.id, user: req.body})
     .then(user => res.json(user.get()))
     .catch(err => res.status(500).json(err));
 });

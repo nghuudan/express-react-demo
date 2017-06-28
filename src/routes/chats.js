@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  chatService.updateChat(req.params.id, req.body)
+  chatService.updateChat({id: req.params.id, chat: req.body})
     .then(chat => res.json(chat.get()))
     .catch(err => res.status(500).json(err));
 });
