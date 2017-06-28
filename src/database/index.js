@@ -15,7 +15,26 @@ const database = new Sequelize('express_react_demo', 'root', '', {
 
 const User = database.import('./user');
 const Chat = database.import('./chat');
+const ChatUser = database.import('./chat-user');
 
 Chat.Owner = Chat.belongsTo(User, { as: 'owner' });
+
+Chat.Users = Chat.belongsToMany(User, {
+  through: {
+    model: ChatUser,
+    unique: false
+  },
+  foreignKey: 'chatId',
+  constraints: false
+});
+
+User.Chats = User.belongsToMany(Chat, {
+  through: {
+    model: ChatUser,
+    unique: false
+  },
+  foreignKey: 'userId',
+  constraints: false
+});
 
 module.exports = database;

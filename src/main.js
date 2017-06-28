@@ -29,6 +29,8 @@ db.sync({ force: true })
         name: 'My Chat',
         ownerId: user.id,
         active: true
+      }).then(chat => {
+        chat.addUser(user);
       }).catch(err => logger.error(err));
     }).catch(err => logger.error(err));
   })

@@ -8,21 +8,36 @@ const attributes = [
   'username',
   'firstName',
   'lastName',
+  'active',
   'createDate',
   'lastUpdate'
 ];
 
+const chatsInclude = {
+  model: db.models.chat,
+  as: 'chats',
+  through: {
+    attributes: []
+  }
+};
+
 exports.attributes = attributes;
 
-exports.getAllUsers = () => db.models.user.findAll({ attributes })
-  .then(users => users)
-  .catch(err => {
-    logger.error(err);
-    throw err;
-  });
+exports.getAllUsers = () => db.models.user.findAll({
+  attributes,
+  include: [
+    chatsInclude
+  ]
+}).then(users => users).catch(err => {
+  logger.error(err);
+  throw err;
+});
 
 exports.getUserById = id => db.models.user.findOne({
   attributes,
+  include: [
+    chatsInclude
+  ],
   where: {
     id
   }

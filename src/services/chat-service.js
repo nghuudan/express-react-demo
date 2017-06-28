@@ -15,12 +15,22 @@ const ownerInclude = {
   as: 'owner'
 };
 
+const usersInclude = {
+  attributes: userService.attributes,
+  model: db.models.user,
+  as: 'users',
+  through: {
+    attributes: []
+  }
+};
+
 exports.attributes = attributes;
 
 exports.getAllChats = () => db.models.chat.findAll({
   attributes,
   include: [
-    ownerInclude
+    ownerInclude,
+    usersInclude
   ]
 }).then(chats => chats).catch(err => {
   logger.error(err);
@@ -33,7 +43,8 @@ exports.getChatById = id => db.models.chat.findOne({
     id
   },
   include: [
-    ownerInclude
+    ownerInclude,
+    usersInclude
   ]
 }).then(chat => {
   if (chat) {
@@ -46,12 +57,12 @@ exports.getChatById = id => db.models.chat.findOne({
   throw err;
 });
 
-exports.createChat = chatToCreate => db.models.chat.create(chatToCreate)
-  .then(chat => chat)
-  .catch(err => {
-    logger.error(err);
-    throw err;
-  });
+exports.createChat = chatToCreate => db.models.chat.create(chatToCreate, {
+  include: [db.models.user]
+}).then(chat => chat).catch(err => {
+  logger.error(err);
+  throw err;
+});
 
 exports.updateChat = (id, chat) => db.models.chat.findOne({
   where: {
