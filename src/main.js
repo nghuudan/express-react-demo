@@ -27,7 +27,7 @@ db.sync({ force: true })
     }).then(user => {
       chatService.createChat({
         name: 'My Chat',
-        ownerId: user.id,
+        ownerId: user.get('id'),
         active: true
       }).then(chat => {
         chat.addUser(user);
