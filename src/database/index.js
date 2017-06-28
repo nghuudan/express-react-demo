@@ -18,6 +18,7 @@ const Chat = database.import('./chat');
 const ChatUser = database.import('./chat-user');
 const ChatMessage = database.import('./chat-message');
 const Message = database.import('./message');
+const MessageUser = database.import('./message-user');
 
 Chat.Owner = Chat.belongsTo(User, { as: 'owner' });
 
@@ -45,6 +46,17 @@ Chat.Messages = Chat.belongsToMany(Message, {
     unique: false
   },
   foreignKey: 'chatId',
+  constraints: false
+});
+
+Message.Sender = Message.belongsTo(User, { as: 'sender' });
+
+Message.Recipients = Message.belongsToMany(User, {
+  through: {
+    model: MessageUser,
+    unique: false
+  },
+  foreignKey: 'messageId',
   constraints: false
 });
 
