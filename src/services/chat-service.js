@@ -1,5 +1,5 @@
 const db = require('../database');
-const logger = require('../utils/logger');
+const handleError = require('../utils/handle-error');
 const userService = require('./user-service');
 
 const attributes = [
@@ -24,6 +24,14 @@ const usersInclude = {
   }
 };
 
+const messagesInclude = {
+  model: db.models.message,
+  as: 'messages',
+  through: {
+    attributes: []
+  }
+};
+
 exports.attributes = attributes;
 
 exports.getAllChats = () => db.models.chat.findAll({
@@ -32,10 +40,7 @@ exports.getAllChats = () => db.models.chat.findAll({
     ownerInclude,
     usersInclude
   ]
-}).then(chats => chats).catch(err => {
-  logger.error(err);
-  throw err;
-});
+}).then(chats => chats).catch(handleError());
 
 exports.getChatById = id => db.models.chat.findOne({
   attributes,
@@ -44,41 +49,48 @@ exports.getChatById = id => db.models.chat.findOne({
   },
   include: [
     ownerInclude,
-    usersInclude
+    usersInclude,
+    messagesInclude
   ]
 }).then(chat => {
   if (chat) {
     return chat;
-  } else {
-    return null;
   }
-}).catch(err => {
-  logger.error(err);
-  throw err;
-});
+  return null;
+}).catch(handleError());
+
+exports.addChatUser = ({ chatId, userId }) => db.models.chat.findOne({
+  where: {
+    id: chatId
+  }
+}).then(chat => {
+  if (chat) {
+    return userService.getUserById(userId).then(user => {
+      return chat.addUser(user)
+        .then(() => chat)
+        .catch(handleError());
+    }).catch(handleError());
+  }
+  return null;
+}).catch(handleError());
 
 exports.createChat = chatToCreate => db.models.chat.create(chatToCreate, {
   include: [db.models.user]
-}).then(chat => chat).catch(err => {
-  logger.error(err);
-  throw err;
-});
+}).then(chat => chat).catch(handleError());
 
-exports.updateChat = (id, chat) => db.models.chat.findOne({
+exports.updateChat = ({id, chat}) => db.models.chat.findOne({
   where: {
     id
   }
 }).then(chatToUpdate => {
   if (chatToUpdate) {
     chat.lastUpdate = new Date();
-    return chatToUpdate.update(chat).then(() => chatToUpdate);
-  } else {
-    return null;
+    return chatToUpdate.update(chat)
+      .then(() => chatToUpdate)
+      .catch(handleError());
   }
-}).catch(err => {
-  logger.error(err);
-  throw err;
-});
+  return null;
+}).catch(handleError());
 
 exports.deleteChat = id => db.models.chat.findOne({
   where: {
@@ -86,11 +98,9 @@ exports.deleteChat = id => db.models.chat.findOne({
   }
 }).then(chatToDelete => {
   if (chatToDelete) {
-    return chatToDelete.destroy().then(() => chatToDelete);
-  } else {
-    return null;
+    return chatToDelete.destroy()
+      .then(() => chatToDelete)
+      .catch(handleError());
   }
-}).catch(err => {
-  logger.error(err);
-  throw err;
-});
+  return null;
+}).catch(handleError());

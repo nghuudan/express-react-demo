@@ -25,16 +25,23 @@ db.sync({ force: true })
       lastName: 'Adams',
       active: true
     }).then(user => {
-      chatService.createChat({
-        name: 'My Chat',
-        ownerId: user.get('id'),
-        active: true
-      }).then(chat => {
-        chat.addUser(user);
-      }).catch(err => logger.error(err));
-    }).catch(err => logger.error(err));
-  })
-  .catch(err => logger.error(err));
+      if (user) {
+        chatService.createChat({
+          name: 'My Chat',
+          ownerId: user.get('id'),
+          active: true
+        }).then(chat => {
+          if (chat) {
+            const chatId = chat.get('id');
+            const userId = user.get('id');
+            chatService.addChatUser({ chatId, userId }).then(chat => {
+              logger.info('addChatUser:', chat.get(), 'user:', user.get());
+            });
+          }
+        });
+      }
+    });
+  });
 
 const server = app.listen(8888, () => {
   const addr = server.address();

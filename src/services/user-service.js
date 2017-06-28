@@ -1,5 +1,5 @@
 const db = require('../database');
-const logger = require('../utils/logger');
+const handleError = require('../utils/handle-error');
 const generateSalt = require('../utils/generate-salt');
 const hashPassword = require('../utils/hash-password');
 
@@ -28,10 +28,7 @@ exports.getAllUsers = () => db.models.user.findAll({
   include: [
     chatsInclude
   ]
-}).then(users => users).catch(err => {
-  logger.error(err);
-  throw err;
-});
+}).then(users => users).catch(handleError());
 
 exports.getUserById = id => db.models.user.findOne({
   attributes,
@@ -44,13 +41,9 @@ exports.getUserById = id => db.models.user.findOne({
 }).then(user => {
   if (user) {
     return user;
-  } else {
-    return null;
   }
-}).catch(err => {
-  logger.error(err);
-  throw err;
-});
+  return null;
+}).catch(handleError());
 
 exports.createUser = userToCreate => {
   const salt = generateSalt('mysalt');
@@ -58,14 +51,16 @@ exports.createUser = userToCreate => {
   userToCreate.salt = salt;
 
   return db.models.user.create(userToCreate)
-    .then(user => user)
-    .catch(err => {
-      logger.error(err);
-      throw err;
-    });
+    .then(user => {
+      if (user) {
+        return user;
+      }
+      return null;
+    })
+    .catch(handleError());
 };
 
-exports.updateUser = (id, user) => db.models.user.findOne({
+exports.updateUser = ({id, user}) => db.models.user.findOne({
   where: {
     id
   }
@@ -77,14 +72,12 @@ exports.updateUser = (id, user) => db.models.user.findOne({
       user.salt = salt;
     }
     user.lastUpdate = new Date();
-    return userToUpdate.update(user).then(() => userToUpdate);
-  } else {
-    return null;
+    return userToUpdate.update(user)
+      .then(() => userToUpdate)
+      .catch(handleError());
   }
-}).catch(err => {
-  logger.error(err);
-  throw err;
-});
+  return null;
+}).catch(handleError());
 
 exports.deleteUser = id => db.models.user.findOne({
   where: {
@@ -92,11 +85,9 @@ exports.deleteUser = id => db.models.user.findOne({
   }
 }).then(userToDelete => {
   if (userToDelete) {
-    return userToDelete.destroy().then(() => userToDelete);
-  } else {
-    return null;
+    return userToDelete.destroy()
+      .then(() => userToDelete)
+      .catch(handleError());
   }
-}).catch(err => {
-  logger.error(err);
-  throw err;
-});
+  return null;
+}).catch(handleError());
