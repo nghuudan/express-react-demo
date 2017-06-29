@@ -6,6 +6,7 @@ const messageService = require('./message-service');
 const attributes = [
   'id',
   'name',
+  'active',
   'createDate',
   'lastUpdate'
 ];
@@ -38,12 +39,9 @@ exports.ownerInclude = ownerInclude;
 exports.usersInclude = usersInclude;
 exports.messagesInclude = messagesInclude;
 
-exports.getAllChats = () => db.models.chat.findAll({
-  attributes,
-  include: [
-    ownerInclude
-  ]
-}).then(chats => chats).catch(handleError());
+exports.getAllChats = () => db.models.chat.findAll()
+  .then(chats => chats)
+  .catch(handleError());
 
 exports.getChatById = id => db.models.chat.findOne({
   attributes,
@@ -100,7 +98,9 @@ exports.addChatUser = ({ chatId, userId }) => db.models.chat.findOne({
   if (chat) {
     return userService.getUserById(userId).then(user => {
       return chat.addUser(user)
-        .then(() => chat)
+        .then(() => {
+          return { chat, user };
+        })
         .catch(handleError());
     }).catch(handleError());
   }

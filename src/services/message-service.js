@@ -19,12 +19,9 @@ const senderInclude = {
 exports.attributes = attributes;
 exports.senderInclude = senderInclude;
 
-exports.getAllMessages = () => db.models.message.findAll({
-  attributes,
-  include: [
-    senderInclude
-  ]
-}).then(messages => messages).catch(handleError());
+exports.getAllMessages = () => db.models.message.findAll()
+  .then(messages => messages)
+  .catch(handleError());
 
 exports.getMessageById = id => db.models.message.findOne({
   attributes,
