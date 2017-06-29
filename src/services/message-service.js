@@ -1,17 +1,55 @@
 const db = require('../database');
 const handleError = require('../utils/handle-error');
+const userService = require('./user-service');
 
-exports.getAllMessages = () => db.models.message.findAll()
-  .then(messages => messages)
-  .catch(handleError());
+const attributes = [
+  'id',
+  'channel',
+  'content',
+  'createDate',
+  'lastUpdate'
+];
+
+const senderInclude = {
+  attributes: userService.attributes,
+  model: db.models.user,
+  as: 'sender'
+};
+
+exports.attributes = attributes;
+exports.senderInclude = senderInclude;
+
+exports.getAllMessages = () => db.models.message.findAll({
+  attributes,
+  include: [
+    senderInclude
+  ]
+}).then(messages => messages).catch(handleError());
 
 exports.getMessageById = id => db.models.message.findOne({
+  attributes,
+  where: {
+    id
+  },
+  include: [
+    senderInclude
+  ]
+}).then(message => {
+  if (message) {
+    return message;
+  }
+  return null;
+}).catch(handleError());
+
+exports.getMessageUsers = id => db.models.message.findOne({
   where: {
     id
   }
 }).then(message => {
   if (message) {
-    return message;
+    return message.getUsers({ attributes: userService.attributes })
+      .then(users => users)
+      .catch(handleError());
   }
   return null;
 }).catch(handleError());

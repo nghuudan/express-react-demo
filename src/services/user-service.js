@@ -22,25 +22,46 @@ const chatsInclude = {
 };
 
 exports.attributes = attributes;
+exports.chatsInclude = chatsInclude;
 
-exports.getAllUsers = () => db.models.user.findAll({
-  attributes,
-  include: [
-    chatsInclude
-  ]
-}).then(users => users).catch(handleError());
+exports.getAllUsers = () => db.models.user.findAll({ attributes })
+  .then(users => users)
+  .catch(handleError());
 
 exports.getUserById = id => db.models.user.findOne({
   attributes,
-  include: [
-    chatsInclude
-  ],
   where: {
     id
   }
 }).then(user => {
   if (user) {
     return user;
+  }
+  return null;
+}).catch(handleError());
+
+exports.getUserChats = id => db.models.user.findOne({
+  where: {
+    id
+  }
+}).then(user => {
+  if (user) {
+    return user.getChats()
+      .then(chats => chats)
+      .catch(handleError());
+  }
+  return null;
+}).catch(handleError());
+
+exports.getUserMessages = id => db.models.user.findOne({
+  where: {
+    id
+  }
+}).then(user => {
+  if (user) {
+    return user.getMessages()
+      .then(messages => messages)
+      .catch(handleError());
   }
   return null;
 }).catch(handleError());

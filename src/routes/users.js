@@ -14,6 +14,18 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
+router.get('/:id/chats', (req, res) => {
+  userService.getUserChats(req.params.id)
+    .then(chats => res.json(chats))
+    .catch(err => res.status(500).json(err));
+});
+
+router.get('/:id/messages', (req, res) => {
+  userService.getUserMessages(req.params.id)
+    .then(messages => res.json(messages))
+    .catch(err => res.status(500).json(err));
+});
+
 router.post('/', (req, res) => {
   userService.createUser(req.body)
     .then(user => res.json(user.get()))

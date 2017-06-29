@@ -49,6 +49,15 @@ Chat.Messages = Chat.belongsToMany(Message, {
   constraints: false
 });
 
+User.Messages = User.belongsToMany(Message, {
+  through: {
+    model: MessageUser,
+    unique: false
+  },
+  foreignKey: 'userId',
+  constraints: false
+});
+
 Message.Sender = Message.belongsTo(User, { as: 'sender' });
 
 Message.Recipients = Message.belongsToMany(User, {

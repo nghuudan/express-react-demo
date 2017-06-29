@@ -35,7 +35,12 @@ db.sync({ force: true })
             const chatId = chat.get('id');
             const userId = user.get('id');
             chatService.addChatUser({ chatId, userId }).then(chat => {
-              logger.info('addChatUser:', chat.get(), 'user:', user.get());
+              db.models.message.create({
+                content: 'Hello, World!',
+                senderId: userId
+              }).then(message => {
+                message.addUser(user).then(() => chat.addMessage(message));
+              });
             });
           }
         });

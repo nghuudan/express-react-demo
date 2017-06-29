@@ -14,6 +14,12 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
+router.get('/:id/users', (req, res) => {
+  messageService.getMessageUsers(req.params.id)
+    .then(users => res.json(users))
+    .catch(err => res.status(500).json(err));
+});
+
 router.post('/', (req, res) => {
   messageService.createMessage(req.body)
     .then(message => res.json(message.get()))

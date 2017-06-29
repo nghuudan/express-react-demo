@@ -1,6 +1,7 @@
 const db = require('../database');
 const handleError = require('../utils/handle-error');
 const userService = require('./user-service');
+const messageService = require('./message-service');
 
 const attributes = [
   'id',
@@ -33,12 +34,14 @@ const messagesInclude = {
 };
 
 exports.attributes = attributes;
+exports.ownerInclude = ownerInclude;
+exports.usersInclude = usersInclude;
+exports.messagesInclude = messagesInclude;
 
 exports.getAllChats = () => db.models.chat.findAll({
   attributes,
   include: [
-    ownerInclude,
-    usersInclude
+    ownerInclude
   ]
 }).then(chats => chats).catch(handleError());
 
@@ -49,8 +52,7 @@ exports.getChatById = id => db.models.chat.findOne({
   },
   include: [
     ownerInclude,
-    usersInclude,
-    messagesInclude
+    usersInclude
   ]
 }).then(chat => {
   if (chat) {
@@ -78,7 +80,12 @@ exports.getChatMessages = id => db.models.chat.findOne({
   }
 }).then(chat => {
   if (chat) {
-    return chat.getMessages()
+    return chat.getMessages({
+      attributes: messageService.attributes,
+      include: [
+        messageService.senderInclude
+      ]
+    })
       .then(messages => messages)
       .catch(handleError());
   }
