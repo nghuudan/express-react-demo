@@ -60,7 +60,7 @@ exports.createUser = userToCreate => {
     .catch(handleError());
 };
 
-exports.updateUser = ({id, user}) => db.models.user.findOne({
+exports.updateUser = ({ id, user }) => db.models.user.findOne({
   where: {
     id
   }

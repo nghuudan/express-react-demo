@@ -20,7 +20,7 @@ exports.createMessage = messageToCreate => db.models.message.create(messageToCre
   .then(message => message)
   .catch(handleError());
 
-exports.updateMessage = ({id, message}) => db.models.message.findOne({
+exports.updateMessage = ({ id, message }) => db.models.message.findOne({
   where: {
     id
   }

@@ -59,6 +59,32 @@ exports.getChatById = id => db.models.chat.findOne({
   return null;
 }).catch(handleError());
 
+exports.getChatUsers = id => db.models.chat.findOne({
+  where: {
+    id
+  }
+}).then(chat => {
+  if (chat) {
+    return chat.getUsers({ attributes: userService.attributes })
+      .then(users => users)
+      .catch(handleError());
+  }
+  return null;
+}).catch(handleError());
+
+exports.getChatMessages = id => db.models.chat.findOne({
+  where: {
+    id
+  }
+}).then(chat => {
+  if (chat) {
+    return chat.getMessages()
+      .then(messages => messages)
+      .catch(handleError());
+  }
+  return null;
+}).catch(handleError());
+
 exports.addChatUser = ({ chatId, userId }) => db.models.chat.findOne({
   where: {
     id: chatId
@@ -78,7 +104,7 @@ exports.createChat = chatToCreate => db.models.chat.create(chatToCreate, {
   include: [db.models.user]
 }).then(chat => chat).catch(handleError());
 
-exports.updateChat = ({id, chat}) => db.models.chat.findOne({
+exports.updateChat = ({ id, chat }) => db.models.chat.findOne({
   where: {
     id
   }
