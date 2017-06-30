@@ -28,7 +28,7 @@ Chat.Users = Chat.belongsToMany(User, {
     unique: false
   },
   foreignKey: 'chatId',
-  constraints: false
+  constraints: true
 });
 
 User.Chats = User.belongsToMany(Chat, {
@@ -37,7 +37,7 @@ User.Chats = User.belongsToMany(Chat, {
     unique: false
   },
   foreignKey: 'userId',
-  constraints: false
+  constraints: true
 });
 
 Chat.Messages = Chat.belongsToMany(Message, {
@@ -46,7 +46,7 @@ Chat.Messages = Chat.belongsToMany(Message, {
     unique: false
   },
   foreignKey: 'chatId',
-  constraints: false
+  constraints: true
 });
 
 User.Messages = User.belongsToMany(Message, {
@@ -55,7 +55,7 @@ User.Messages = User.belongsToMany(Message, {
     unique: false
   },
   foreignKey: 'userId',
-  constraints: false
+  constraints: true
 });
 
 Message.Sender = Message.belongsTo(User, { as: 'sender' });
@@ -66,7 +66,7 @@ Message.Recipients = Message.belongsToMany(User, {
     unique: false
   },
   foreignKey: 'messageId',
-  constraints: false
+  constraints: true
 });
 
 Message.Chats = Message.belongsToMany(Chat, {
@@ -75,7 +75,7 @@ Message.Chats = Message.belongsToMany(Chat, {
     unique: false
   },
   foreignKey: 'messageId',
-  constraints: false
+  constraints: true
 });
 
 module.exports = database;
