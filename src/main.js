@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const db = require('./database');
 const userService = require('./services/user-service');
 const chatService = require('./services/chat-service');
+const messageService = require('./services/message-service');
 const logger = require('./utils/logger');
 const routes = require('./routes');
 const app = express();
@@ -26,16 +27,16 @@ db.sync({ force: true })
       active: true
     }).then(user => {
       if (user) {
+        const userId = user.get('id');
         chatService.createChat({
           name: 'My Chat',
-          ownerId: user.get('id'),
+          ownerId: userId,
           active: true
         }).then(chat => {
           if (chat) {
             const chatId = chat.get('id');
-            const userId = user.get('id');
             chatService.addChatUser({ chatId, userId }).then(() => {
-              db.models.message.create({
+              messageService.createMessage({
                 content: 'Hello, World!',
                 senderId: userId
               }).then(message => {
