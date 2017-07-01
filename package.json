@@ -1,7 +1,7 @@
 {
   "name": "express-react-demo",
   "private": true,
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Demo project for an Express server and React client",
   "main": "index.js",
   "scripts": {
