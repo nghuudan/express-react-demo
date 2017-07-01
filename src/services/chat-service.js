@@ -107,6 +107,25 @@ exports.addChatUser = ({ chatId, userId }) => db.models.chat.findOne({
   return null;
 }).catch(handleError());
 
+exports.addChatMessage = ({ chatId, userId, message }) => db.models.chat.findOne({
+  where: {
+    id: chatId
+  }
+}).then(chat => {
+  if (chat) {
+    return messageService.createMessage({
+      channel: message.channel,
+      content: message.content,
+      senderId: userId
+    }).then(message => {
+      return chat.addMessage(message).then(() => {
+        return { chat, message };
+      }).catch(handleError());
+    }).catch(handleError());
+  }
+  return null;
+}).catch(handleError());
+
 exports.createChat = chatToCreate => db.models.chat.create(chatToCreate, {
   include: [db.models.user]
 }).then(chat => chat).catch(handleError());

@@ -38,7 +38,7 @@ db.sync({ force: true }).then(() => {
               content: 'Hello, World!',
               senderId: userId
             }).then(message => {
-              message.addUser(user).then(() => chat.addMessage(message));
+              message.setUsers([user]).then(() => chat.addMessage(message));
             });
           });
         }

@@ -30,7 +30,9 @@ exports.getMessageById = id => db.models.message.findOne({
     id
   },
   include: [
-    senderInclude
+    senderInclude,
+    userService.chatsInclude,
+    chatService.usersInclude
   ]
 }).then(message => {
   if (message) {
