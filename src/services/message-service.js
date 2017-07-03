@@ -7,6 +7,7 @@ const attributes = [
   'id',
   'channel',
   'content',
+  'active',
   'createDate',
   'lastUpdate'
 ];
