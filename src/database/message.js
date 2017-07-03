@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING(1024)
     },
+    active: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN
+    },
     createDate: {
       allowNull: false,
       defaultValue: DataTypes.NOW,
